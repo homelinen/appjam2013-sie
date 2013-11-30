@@ -1,28 +1,22 @@
+Calendar = new Meteor.Collection("calendar")
+
+class Event
+  constructor: (options) ->
+
+    [@date,@message] = options
+
 if (Meteor.isClient)
 
-  class Event
-    constructor: (options) ->
-
-      console.log(options)
-      [@date,@message] = options
-
-  class Calendar
-
-    constructor: (options) ->
-      @days = (
-        new Event([day + 1, "Eh?"])  for day in [0..24])
-
+  Meteor.subscribe("calendar")
 
   Template.calendar.event = ->
-    cal = new Calendar
-    cal.days
+    Calendar.find()
 
   Template.calendar.events({
     'keydown input': (event) ->
       if (event.which == 13)
         console.log("Pressed Enter")
   })
-
 
   Template.hello.greeting = ->
     "Welcome to Christmas App."
@@ -35,8 +29,13 @@ if (Meteor.isClient)
     
   })
 
-
 if (Meteor.isServer)
+
+  #Calendar.remove({})
+  #Calendar.insert(new Event([day + 1,"A horse"])) for day in [0..24]
+
+  Meteor.publish("calendar", ->
+    Calendar.find().fetch())
   Meteor.startup(->
     # code to run on server at startup
   )
