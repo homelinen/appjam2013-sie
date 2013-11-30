@@ -52,7 +52,7 @@ if (Meteor.isClient)
     result
     #{date: 1, message: "red"}
 
-  Template.calendar.rendered(->
+  Template.calendar.rendered = ->
 
     # Global assignments
     if (window.location.pathname.indexOf("edit") == -1)
@@ -63,11 +63,9 @@ if (Meteor.isClient)
       console.log("Show")
 
     $('.event').click(->
-      $(this).addClass("span12")
-      alert("Click")
+      chosen_event=parseInt($(this).children().attr("class")[0])
+      console.log($(this).attr("class"))
     )
-  )
-
 
   focus_enabled=true
 
