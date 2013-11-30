@@ -18,6 +18,9 @@
 
 <template name="calendar">
 {{#each event}}
-  <li>{{ ev.date }}</li>
+  <li>
+    {{ date }}
+    <input name="message" value="{{message}}"/>
+  </li>
 {{/each}}
 </template>
