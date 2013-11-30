@@ -1,5 +1,6 @@
 Calendar = new Meteor.Collection("calendar")
 
+chosen_event=-1
 
 class Event
   constructor: (options) ->
@@ -8,26 +9,10 @@ class Event
 
 if (Meteor.isClient)
 
-  # Global assignments
-  if (window.location.pathname.indexOf("edit") == -1)
-    $('.event input').hide()
-    console.log("Hide")
-  else
-    $('.event input').show()
-    console.log("Show")
-
-  $('.event').click(->
-    alert("Click")
-    $('.event').addClass('span12')
-    $('.event').css("height", "2em")
-  )
-
-
   Meteor.subscribe("calendar")
 
   Template.calendar.event = ->
     Calendar.find({}, sort: {date: 1})
-
 
   update_message = (event) ->
 
@@ -47,6 +32,45 @@ if (Meteor.isClient)
       update_message(event)
   })
 
+  chosen_event = 2
+  Template.focus.event = ->
+    console.log("Message: " + @message)
+
+    console.log(Calendar.find({date: 2}))
+
+    res = Calendar.find({date: 1}).fetch()
+
+    console.log("Resource: ", res[0])
+    result = res[0]
+
+    if (result != undefined)
+      youtube_short = result.youtube.match(/v=([a-zA-Z]*)/)[1]
+      console.log("youtube short: " + youtube_short)
+      result.youtube_short = youtube_short
+
+    console.log("Result: ", result)
+    result
+    #{date: 1, message: "red"}
+
+  Template.calendar.rendered(->
+
+    # Global assignments
+    if (window.location.pathname.indexOf("edit") == -1)
+      $('.event input').hide()
+      console.log("Hide")
+    else
+      $('.event input').show()
+      console.log("Show")
+
+    $('.event').click(->
+      $(this).addClass("span12")
+      alert("Click")
+    )
+  )
+
+
+  focus_enabled=true
+
 if (Meteor.isServer)
 
   #Calendar.remove({})
@@ -65,10 +89,12 @@ if (Meteor.isServer)
     update_message: (date, message) ->
  
       date = parseInt(date)
-      Calendar.update({date: date}, {date:date, message: message})
+      Calendar.update({date: date}, {$set: {message: message}})
       Calendar.find({date: date})
 
       console.log(message)
+    open_calendar: (date) ->
+      Calendar.update({date: date}, {$set:{open: true}})
   })
 
   Meteor.startup(->

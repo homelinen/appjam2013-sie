@@ -6,29 +6,45 @@
 <div id="wrapper" class="container">
   <h1>Advent Calendar</h1>
 
+  <div id="focus" class="container">
+    <div class="span12">
+      {{>focus}}
+    </div>
+  </div>
+
   <ul class="calendar row">
     {{> calendar}}
   </ul>
 </div>
 </body>
 
+<template name="focus">
+  <div class="date">{{ event.date }}</div>
+  <form>
+    <input name="message" class="{{event.date}}" value="{{event.message}}"/>
+  <!--<input name="open" class="btn-primary btn open" value="Open" />-->
+  </form>
+  <object width="320" height="280">
+    <param name="movie" value="https://www.youtube.com/v/{{event.youtube_short}}?version=3"></param>
+    <param name="allowFullScreen" value="true"></param>
+    <param name="allowScriptAccess" value="always"></param>
+    <embed src="https://www.youtube.com/v/{{event.youtube_short}}?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="320" height="180"></embed>
+  </object>
+</template>
+
+<template name="event">
+  <div class="date">{{ date }}</div>
+  <form>
+    <input name="message" class="{{date}}" value="{{message}}"/>
+    <input name="youtube" class="{{date}}" value="{{youtube}}"/>
+  <!--<input name="open" class="btn-primary btn open" value="Open" />-->
+  </form>
+</template>
+
 <template name="calendar">
 {{#each event}}
-  <li class="event span3">
-  <div class="date">{{ date }}</div>
-    <form>
-    <input name="message" class="{{date}}" value="{{message}}"/>
-    <input name="open" class="btn-primary btn open" value="Open" />
-    </form>
-
-    {{#if youtube}}
-    <object width="640" height="360">
-      <param name="movie" value="https://www.youtube.com/v/M7lc1UVf-VE?version=3"></param>
-      <param name="allowFullScreen" value="true"></param>
-      <param name="allowScriptAccess" value="always"></param>
-      <embed src="https://www.youtube.com/v/M7lc1UVf-VE?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="640" height="360"></embed>
-    </object>
-    {{/if}}
+  <li class="event span3 {{#if open}}open-door{{/if}}">
+    {{> event}}
   </li>
 {{/each}}
 </template>
