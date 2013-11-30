@@ -1,11 +1,27 @@
 Calendar = new Meteor.Collection("calendar")
 
+
 class Event
   constructor: (options) ->
 
     [@date,@message] = options
 
 if (Meteor.isClient)
+
+  # Global assignments
+  if (window.location.pathname.indexOf("edit") == -1)
+    $('.event input').hide()
+    console.log("Hide")
+  else
+    $('.event input').show()
+    console.log("Show")
+
+  $('.event').click(->
+    alert("Click")
+    $('.event').addClass('span12')
+    $('.event').css("height", "2em")
+  )
+
 
   Meteor.subscribe("calendar")
 
@@ -29,17 +45,6 @@ if (Meteor.isClient)
     ,
     'blur input': (event) ->
       update_message(event)
-  })
-
-  Template.hello.greeting = ->
-    "Welcome to Christmas App."
-
-  Template.hello.events({
-    'click input' : ->
-      # template data, if any, is available in 'this'
-      if (typeof console != 'undefined')
-        console.log("You pressed the button")
-    
   })
 
 if (Meteor.isServer)
